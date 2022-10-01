@@ -1,0 +1,2 @@
+ALTER TABLE orders DROP COLUMN pro_id;
+ALTER TABLE orders DROP COLUMN user_id;

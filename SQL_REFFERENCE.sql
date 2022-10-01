@@ -32,7 +32,6 @@ CREATE TABLE orders (
 );
 
 ALTER TABLE orders ADD COLUMN pro_id INTEGER REFERENCES products(id);
-
 ALTER TABLE orders ADD COLUMN user_id INTEGER REFERENCES users(id);
 
 
