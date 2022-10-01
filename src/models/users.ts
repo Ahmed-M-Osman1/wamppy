@@ -38,11 +38,16 @@ export class UsersModel {
     }
   }
   // create user model:
-  async create(name: string): Promise<User> {
+  async create(user: User): Promise<User> {
     try {
       const connection = await client.connect();
-      const sql = "INSERT INTO users (name) VALUES($1) RETURNING *";
-      const result = await connection.query(sql, [name]);
+      const sql =
+        "INSERT INTO users (firstName,lastName, password) VALUES ($1,$2,$3) RETURNING *";
+      const result = await connection.query(sql, [
+        user.firstName,
+        user.lastName,
+        user.password,
+      ]);
       connection.release();
       return result.rows[0];
     } catch (error) {
