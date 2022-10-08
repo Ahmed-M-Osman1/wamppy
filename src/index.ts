@@ -1,17 +1,23 @@
 import express from "express";
-import client from "./database";
+import users_routes from "./handlers/users";
+import products_routes from "./handlers/products"
+
+const bp = require('body-parser')
 
 const app = express();
-const port = 3001;
+const port = 3001;0
 
-app.get("/", async (req, res) => {
-  const connection = await client.connect(); // Create a new connection to the database
-  const query = "SELECT * FROM users"; // Create a query to select all students
-  const results = await connection.query(query); // Execute the query
-  connection.release(); // Release the connection
-  res.send(results.rows); // Send the results
+// use bodyparser to send req in urlencoded form.
+app.use(bp.json())
+app.use(bp.urlencoded({ extended: true }))
+
+app.get('/', async (_req, res) => {
+	res.send('Welcome to Wammpy. An Online storeFront using Node.js.');
 });
 
+users_routes(app);
+products_routes(app);
+
 app.listen(port, () => {
-  console.log(`app listen on ${port}`);
+	console.log(`app listen on ${port}`);
 });
