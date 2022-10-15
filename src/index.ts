@@ -5,11 +5,10 @@ import orders_routes from "./handlers/orders";
 const bp = require('body-parser')
 
 const app = express();
-const port = 3001; 0
+const port = 3001; 
 
 // use bodyparser to send req in urlencoded form.
-app.use(bp.json())
-app.use(bp.urlencoded({extended: true}))
+app.use(express.json())
 
 app.get('/', async (_req, res) => {
 	res.send('Welcome to Wammpy. An Online storeFront using Node.js.');

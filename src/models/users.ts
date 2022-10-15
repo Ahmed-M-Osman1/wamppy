@@ -1,11 +1,15 @@
 import client from "../database";
+import bcrypt from 'bcrypt';
 
 export type User = {
 	id?: number;
-	firstName: string;
-	lastName: string;
+	firstname: string;
+	lastname: string;
+	email: string;
 	password: string;
 };
+
+const { PEPPER, SALT_ROUNDS } = process.env;
 
 export class UsersModel {
 	// index all users model:
@@ -42,11 +46,13 @@ export class UsersModel {
 		try {
 			const connection = await client.connect();
 			const sql =
-				"INSERT INTO users (firstname,lastname, password) VALUES ($1,$2,$3) RETURNING *";
+				"INSERT INTO users (firstname,lastname,email, password) VALUES ($1,$2,$3, $4) RETURNING *";
+			const hashPassword = bcrypt.hashSync(user.password + PEPPER, Number(SALT_ROUNDS));
 			const result = await connection.query(sql, [
-				user.firstName,
-				user.lastName,
-				user.password,
+				user.firstname,
+				user.lastname,
+				user.email,
+				hashPassword,
 			]);
 			connection.release();
 			return result.rows[0];
@@ -64,8 +70,8 @@ export class UsersModel {
 			const sql =
 				"UPDATE user SET firstName=($1) lastName=($2) WHERE id=($3) RETURNING *";
 			const result = await connection.query(sql, [
-				user.firstName,
-				user.lastName,
+				user.firstname,
+				user.lastname,
 				user.id,
 			]);
 			connection.release();
@@ -90,4 +96,23 @@ export class UsersModel {
 			);
 		}
 	}
+	// login user using email and password
+  async login(email: string, password: string): Promise<User | null> {
+    try {
+      const conn = await client.connect();
+      const sql = 'SELECT * FROM users WHERE email=($1)';
+      const result = await conn.query(sql, [email]);
+      const user = result.rows[0];
+      if (user) {
+        if (bcrypt.compareSync(password + PEPPER, user.password)) {
+          return user;
+        }
+      }
+      return null;
+    } catch (error) {
+      throw new Error(
+        `Failed to sign in with this user because of the following error: ${error}`
+      );
+    }
+  }
 }
