@@ -5,9 +5,16 @@ const testOrder: Order = {
   status: "active",
   pro_id: 0,
   user_id: 0,
-}
+};
 let newOrder: Order;
 describe("Testing OrdersModel: ", () => {
+    beforeAll(async () => {
+      const lead = await OrdersModel.create({
+        name: 'C-3PO',
+        email: 'C@3PO.com',
+        password: 'beep-boop',
+      });
+    });
   it("Test the create methods", () => {
     expect(OrdersModel.create).toBeDefined();
   });

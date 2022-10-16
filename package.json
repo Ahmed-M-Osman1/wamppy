@@ -10,7 +10,8 @@
     "lint": "eslint src/*.ts",
     "lint:f": "eslint src/*.ts --fix",
     "jasmine": "jasmine",
-    "test": "npm run build && npm run jasmine",
+    "testWithoutDatabase": "npm run build && npm run jasmine",
+    "test": "tsc && set ENV='test'&& db-migrate --env test up && jasmine && db-migrate --env test reset",
     "prettier": "prettier --write '**/*.ts'"
   },
   "author": "Ahmed M.Osman",

@@ -2,8 +2,8 @@ import { Product, ProductModel } from "../../models/products";
 const ProductsModel = new ProductModel();
 const testProduct: Product = {
   name: "testItem",
-  price: 1,
-  category: "test"
+  price: 1.0,
+  category: "test",
 };
 let newProduct: Product;
 describe("Testing ProductsModel: ", () => {
@@ -44,7 +44,9 @@ describe("Testing ProductsModel: ", () => {
   });
 
   it("Test the delete method to return the deleted Product", async () => {
-    const deletedProduct = await ProductsModel.deleteProduct(newProduct.id as number);
+    const deletedProduct = await ProductsModel.deleteProduct(
+      newProduct.id as number
+    );
     expect(deletedProduct.id).toEqual(newProduct.id);
   });
 });

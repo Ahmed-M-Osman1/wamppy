@@ -1,3 +1,5 @@
+// Reporter from jasmine repo. 
+
 import {
   DisplayProcessor,
   SpecReporter,
