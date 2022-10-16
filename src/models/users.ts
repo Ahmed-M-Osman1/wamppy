@@ -1,106 +1,109 @@
 import client from "../database";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 export type User = {
-	id?: number;
-	firstname: string;
-	lastname: string;
-	email: string;
-	password: string;
+  id?: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
 };
 
 const { PEPPER, SALT_ROUNDS } = process.env;
 
 export class UsersModel {
-	// index all users model:
-	async index(): Promise<User[]> {
-		try {
-			const connection = await client.connect();
-			const sql = "SELECT * FROM users";
-			const result = await connection.query(sql);
-			connection.release();
-			return result.rows;
-		} catch (error) {
-			throw new Error(
-				`Can't load users because of the following error: ${error}`
-			);
-		}
-	}
+  // index all users model:
+  async index(): Promise<User[]> {
+    try {
+      const connection = await client.connect();
+      const sql = "SELECT * FROM users";
+      const result = await connection.query(sql);
+      connection.release();
+      return result.rows;
+    } catch (error) {
+      throw new Error(
+        `Can't load users because of the following error: ${error}`
+      );
+    }
+  }
 
-	// show one user model:
-	async show(id: number): Promise<User> {
-		try {
-			const connection = await client.connect();
-			const sql = "SELECT * FROM users WHERE id=($1)";
-			const result = await connection.query(sql, [id]);
-			connection.release();
-			return result.rows[0];
-		} catch (error) {
-			throw new Error(
-				`Can't load this user because of the following error: ${error}`
-			);
-		}
-	}
-	// create user model:
-	async create(user: User): Promise<User> {
-		try {
-			const connection = await client.connect();
-			const sql =
-				"INSERT INTO users (firstname,lastname,email, password) VALUES ($1,$2,$3, $4) RETURNING *";
-			const hashPassword = bcrypt.hashSync(user.password + PEPPER, Number(SALT_ROUNDS));
-			const result = await connection.query(sql, [
-				user.firstname,
-				user.lastname,
-				user.email,
-				hashPassword,
-			]);
-			connection.release();
-			return result.rows[0];
-		} catch (error) {
-			throw new Error(
-				`Can't create user because of the following error: ${error}`
-			);
-		}
-	}
+  // show one user model:
+  async show(id: number): Promise<User> {
+    try {
+      const connection = await client.connect();
+      const sql = "SELECT * FROM users WHERE id=($1)";
+      const result = await connection.query(sql, [id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(
+        `Can't load this user because of the following error: ${error}`
+      );
+    }
+  }
+  // create user model:
+  async create(user: User): Promise<User> {
+    try {
+      const connection = await client.connect();
+      const sql =
+        "INSERT INTO users (firstname,lastname,email, password) VALUES ($1,$2,$3, $4) RETURNING *";
+      const hashPassword = bcrypt.hashSync(
+        user.password + PEPPER,
+        Number(SALT_ROUNDS)
+      );
+      const result = await connection.query(sql, [
+        user.firstname,
+        user.lastname,
+        user.email,
+        hashPassword,
+      ]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(
+        `Can't create user because of the following error: ${error}`
+      );
+    }
+  }
 
-	// update user model:
-	async update(user: User): Promise<User> {
-		try {
-			const connection = await client.connect();
-			const sql =
-				"UPDATE user SET firstName=($1) lastName=($2) WHERE id=($3) RETURNING *";
-			const result = await connection.query(sql, [
-				user.firstname,
-				user.lastname,
-				user.id,
-			]);
-			connection.release();
-			return result.rows[0];
-		} catch (error) {
-			throw new Error(
-				`Can't update user because of the following error: ${error}`
-			);
-		}
-	}
-	// delete user model:
-	async deleteUser(id: number): Promise<User> {
-		try {
-			const connection = await client.connect();
-			const sql = "DELETE FROM users WHERE id=($1) RETURNING *";
-			const result = await connection.query(sql, [id]);
-			connection.release();
-			return result.rows[0];
-		} catch (error) {
-			throw new Error(
-				`Can't update user because of the following error: ${error}`
-			);
-		}
-	}
-	// login user using email and password
+  // update user model:
+  async update(user: User): Promise<User> {
+    try {
+      const connection = await client.connect();
+      const sql =
+        "UPDATE user SET firstName=($1) lastName=($2) WHERE id=($3) RETURNING *";
+      const result = await connection.query(sql, [
+        user.firstname,
+        user.lastname,
+        user.id,
+      ]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(
+        `Can't update user because of the following error: ${error}`
+      );
+    }
+  }
+  // delete user model:
+  async deleteUser(id: number): Promise<User> {
+    try {
+      const connection = await client.connect();
+      const sql = "DELETE FROM users WHERE id=($1) RETURNING *";
+      const result = await connection.query(sql, [id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(
+        `Can't update user because of the following error: ${error}`
+      );
+    }
+  }
+  // login user using email and password
   async login(email: string, password: string): Promise<User | null> {
     try {
       const conn = await client.connect();
-      const sql = 'SELECT * FROM users WHERE email=($1)';
+      const sql = "SELECT * FROM users WHERE email=($1)";
       const result = await conn.query(sql, [email]);
       const user = result.rows[0];
       if (user) {
