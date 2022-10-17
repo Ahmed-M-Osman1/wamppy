@@ -29,9 +29,9 @@ const show = async (req: Request, res: Response) => {
         "user you ask for does not match with current user token - please provide a correct user ID"
       )
     ) {
-      res.status(500).json(e.message);
-    } else {
       res.status(401).json(e.message);
+    } else {
+      res.status(500).json(e.message);
     }
   }
 };

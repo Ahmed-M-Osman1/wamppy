@@ -14,9 +14,9 @@ function verifyUser(req: Request, userID?: number) {
     //get the user token:
     const userToken = authorizationFromHeader.slice(7)
     // verify it:
-    const decoded = verify(userToken as string, theSecretToken) as JwtPayload;
+    const decodedJWT = verify(userToken as string, theSecretToken) as JwtPayload;
     // then check is the used ID from user token is match the user ID required (extra step so no one can show others date).
-    if (userID && decoded.data.UID != userID) {
+    if (userID && decodedJWT.data.UID != userID) {
       // If the user ID is passed and the decoded user ID is not the same as the passed userID then this error will be thrown
       throw new Error(
         "user you ask for does not match with current user token - please provide a correct user ID!"

@@ -10,7 +10,7 @@
     "user": { "ENV": "DB_USER" },
     "password": { "ENV": "DB_PASSWORD" },
     "host": { "ENV": "DB_HOST" },
-    "database": { "ENV": "TEST_DB_NAME" },
+    "database": { "ENV": "DB_NAME_FOR_TEST" },
     "driver": "pg"
   }
 }
