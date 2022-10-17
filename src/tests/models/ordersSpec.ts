@@ -1,4 +1,24 @@
 import { Order, OrderModel } from "../../models/orders";
+import { User, UsersModel } from "../../models/users";
+import { Product, ProductModel } from "../../models/products";
+
+// Create a user: 
+const UserModel = new UsersModel();
+const testUser: User = {
+  firstname: "ahmed",
+  lastname: "mamdouh",
+  email: "ahmed@udacity.com",
+  password: "password",
+};
+
+// Create a product:
+const ProductsModel = new ProductModel();
+const testProduct: Product = {
+  name: "testItem",
+  price: 1.000,
+  category: "test",
+};
+
 const OrdersModel = new OrderModel();
 const testOrder: Order = {
   quantity: 2,
@@ -7,14 +27,15 @@ const testOrder: Order = {
   user_id: 0,
 };
 let newOrder: Order;
+
+
 describe("Testing OrdersModel: ", () => {
     beforeAll(async () => {
-      const lead = await OrdersModel.create({
-        name: 'C-3PO',
-        email: 'C@3PO.com',
-        password: 'beep-boop',
+      const newUser = await UserModel.create(testUser);
+      const newProduct = await ProductsModel.create(testProduct);
+      if (newUser.id) testOrder.user_id = newUser.id;
+      if (newProduct.id) testOrder.pro_id = newProduct.id;
       });
-    });
   it("Test the create methods", () => {
     expect(OrdersModel.create).toBeDefined();
   });
@@ -34,7 +55,7 @@ describe("Testing OrdersModel: ", () => {
 
   it("Test the index methods to include the testOrder", async () => {
     const allOrders = await OrdersModel.index();
-    expect(allOrders).toContain(testOrder);
+    expect(allOrders).toContain(newOrder);
   });
 
   it("Test the show methods", () => {

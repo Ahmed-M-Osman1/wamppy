@@ -2,7 +2,7 @@ import { Product, ProductModel } from "../../models/products";
 const ProductsModel = new ProductModel();
 const testProduct: Product = {
   name: "testItem",
-  price: 1.0,
+  price: 1.000,
   category: "test",
 };
 let newProduct: Product;
