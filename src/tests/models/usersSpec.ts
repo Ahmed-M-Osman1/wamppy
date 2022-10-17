@@ -29,7 +29,7 @@ describe("Testing UsersModel: ", () => {
 
   it("Test the index methods to include the testUser", async () => {
     const allUsers = await UserModel.index();
-    expect(allUsers).toContain(testUser);
+    expect(allUsers).toContain(newUser);
   });
 
   it("Test the show methods", () => {
@@ -37,7 +37,7 @@ describe("Testing UsersModel: ", () => {
   });
 
   it("Test the show methods to return the testUser", async () => {
-    const userToSearch = await UserModel.show(testUser.id as number);
+    const userToSearch = await UserModel.show(newUser.id as number);
     expect(userToSearch).toEqual(newUser);
   });
   it("Test the delete method", () => {

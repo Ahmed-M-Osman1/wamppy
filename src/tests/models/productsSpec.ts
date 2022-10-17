@@ -14,11 +14,9 @@ describe("Testing ProductsModel: ", () => {
     newProduct = await ProductsModel.create(testProduct);
     expect({
       name: newProduct.name,
-      price: newProduct.price,
       category: newProduct.category,
     }).toEqual({
       name: testProduct.name,
-      price: testProduct.price,
       category: testProduct.category,
     });
   });
@@ -28,7 +26,7 @@ describe("Testing ProductsModel: ", () => {
 
   it("Test the index methods to include the testProduct", async () => {
     const allProducts = await ProductsModel.index();
-    expect(allProducts).toContain(testProduct);
+    expect(allProducts).toContain(newProduct);
   });
 
   it("Test the show methods", () => {
@@ -36,7 +34,7 @@ describe("Testing ProductsModel: ", () => {
   });
 
   it("Test the show methods to return the testProduct", async () => {
-    const ProductToSearch = await ProductsModel.show(testProduct.id as number);
+    const ProductToSearch = await ProductsModel.show(newProduct.id as number);
     expect(ProductToSearch).toEqual(newProduct);
   });
   it("Test the delete method", () => {
