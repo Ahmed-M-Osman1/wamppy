@@ -12,9 +12,11 @@ export class ProductModel {
   async index(): Promise<Product[]> {
     try {
       const connection = await client.connect();
+            // sql query:
       const sql = "SELECT * FROM products";
       const result = await connection.query(sql);
       connection.release();
+            // return results:
       return result.rows;
     } catch (error) {
       throw new Error(
@@ -27,9 +29,11 @@ export class ProductModel {
   async show(id: number): Promise<Product> {
     try {
       const connection = await client.connect();
+            // sql query:
       const sql = "SELECT * FROM products WHERE id=($1)";
       const result = await connection.query(sql, [id]);
       connection.release();
+            // return results:
       return result.rows[0];
     } catch (error) {
       throw new Error(
@@ -42,9 +46,11 @@ export class ProductModel {
   async selectCategory(category: string): Promise<Product[]> {
     try {
       const connection = await client.connect();
+            // sql query:
       const sql = "SELECT * FROM products WHERE category=($1)";
       const result = await connection.query(sql, [category]);
       connection.release();
+                  // return results:
       return result.rows;
     } catch (error) {
       throw new Error(
@@ -56,6 +62,7 @@ export class ProductModel {
   async create(product: Product): Promise<Product> {
     try {
       const connection = await client.connect();
+                  // sql query:
       const sql =
         "INSERT INTO products (name, price, category) VALUES ($1,$2,$3) RETURNING *";
       const result = await connection.query(sql, [
@@ -64,6 +71,7 @@ export class ProductModel {
         product.category,
       ]);
       connection.release();
+                  // return results:
       return result.rows[0];
     } catch (error) {
       throw new Error(
@@ -75,6 +83,7 @@ export class ProductModel {
   async update(product: Product): Promise<Product> {
     try {
       const connection = await client.connect();
+                  // sql query:
       const sql =
         "UPDATE products SET name=($1) price=($2) category=($3) WHERE id=($4) RETURNING *";
       const result = await connection.query(sql, [
@@ -84,6 +93,7 @@ export class ProductModel {
         product.id,
       ]);
       connection.release();
+                  // return results:
       return result.rows[0];
     } catch (error) {
       throw new Error(
@@ -95,9 +105,11 @@ export class ProductModel {
   async deleteProduct(id: number): Promise<Product> {
     try {
       const connection = await client.connect();
+                        // sql query:
       const sql = "DELETE FROM products WHERE id=($1) RETURNING *";
       const result = await connection.query(sql, [id]);
       connection.release();
+                        // return results:
       return result.rows[0];
     } catch (error) {
       throw new Error(

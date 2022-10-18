@@ -9,13 +9,16 @@ export type Order = {
 };
 
 export class OrderModel {
+
   // index all orders model:
   async index(): Promise<Order[]> {
     try {
       const connection = await client.connect();
+      // sql query:
       const sql = "SELECT * FROM orders";
       const result = await connection.query(sql);
       connection.release();
+      // return results:
       return result.rows;
     } catch (error) {
       throw new Error(
@@ -28,9 +31,11 @@ export class OrderModel {
   async showUserOrder(user_id: number): Promise<Order[]> {
     try {
       const connection = await client.connect();
+            // sql query:
       const sql = "SELECT * FROM orders WHERE user_id=($1)";
       const result = await connection.query(sql, [user_id]);
       connection.release();
+            // return results:
       return result.rows;
     } catch (error) {
       throw new Error(
@@ -43,10 +48,12 @@ export class OrderModel {
   async showUserCompletedOrders(user_id: number): Promise<Order[]> {
     try {
       const connection = await client.connect();
+                  // sql query:
       const sql =
         "SELECT * FROM orders WHERE user_id=($1) AND status='completed'";
       const result = await connection.query(sql, [user_id]);
       connection.release();
+                  // return results:
       return result.rows;
     } catch (error) {
       throw new Error(
@@ -58,6 +65,8 @@ export class OrderModel {
   async create(order: Order): Promise<Order> {
     try {
       const connection = await client.connect();
+                        // sql query:
+
       const sql =
         "INSERT INTO orders (quantity,status, pro_id, user_id) VALUES ($1,$2,$3,$4) RETURNING *";
       const result = await connection.query(sql, [
@@ -67,6 +76,7 @@ export class OrderModel {
         order.user_id,
       ]);
       connection.release();
+                        // return results:
       return result.rows[0];
     } catch (error) {
       throw new Error(
@@ -78,9 +88,11 @@ export class OrderModel {
   async deleteOrder(id: number): Promise<Order> {
     try {
       const connection = await client.connect();
+                              // sql query:
       const sql = "DELETE FROM orders WHERE id=($1) RETURNING *";
       const result = await connection.query(sql, [id]);
       connection.release();
+                              // return results:
       return result.rows[0];
     } catch (error) {
       throw new Error(
