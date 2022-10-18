@@ -89,7 +89,7 @@ Here are some of the few packages that were installed.
 `npm i --save-dev @types/supertest`
 
 #### jasmine
-`npm install jasmine @types/jasmine @ert78gb/jasmine-ts ts-node --save-dev`
+`npm install jasmine @types/jasmine ts-node --save-dev`
 
 ## 🎬 Start App:
 `yarn dev` or `npm run dev` to start the project in `nodmon` or `yarn start` or `npm start` to run the project locally.
