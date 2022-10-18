@@ -21,9 +21,6 @@ Here are some of the few packages that were installed.
 `npm i -S express`
 `npm i -D @types/express`
 
-#### g
-`npm install -g n`
-
 #### db-migrate
 `npm install -g db-migrate`
 
@@ -48,9 +45,11 @@ Here are some of the few packages that were installed.
 
 You have to create the databases for dev and test.
 
-1- `psql -U postgres` connect to the default postgres database as the server's root user 
+- Create a postgres user with username postgres and password `postgres`
 - In psql run the following to create a user 
-    - `CREATE USER shopping_user WITH PASSWORD 'password123';`
+    - `CREATE USER postgres WITH PASSWORD 'postgres';`
+
+- `psql -U postgres` first. This commened will connect you to the postgres as a root user. 
 - In psql run the following to create the dev and test database
     - `CREATE DATABASE shopping;`
     - `CREATE DATABASE shopping_test;`
