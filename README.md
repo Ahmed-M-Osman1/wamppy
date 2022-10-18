@@ -55,7 +55,7 @@ PEPPER='OSMAN'
 SALT_ROUNDS=12
 ENV='dev'
 ```
-#### PLEASE NOTE: that without the `.env` file the project will not going to work.
+#### PLEASE NOTE: that without the `.env` file the project will not going to work. You should create it.
 
 ## 🏁 Installation Instructions:
 In this section, you can find all the package that I have used. You can simply ``` npm i ``` or ``` yarn ``` to install them all from my [package.json](package.json)  file
