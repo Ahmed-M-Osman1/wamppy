@@ -40,23 +40,6 @@ Run the following commened to migrate the DateBase:
 
 This will create all the table and relations. 
 
-## 🌴 Enviromental Variables Set up:
-
-Add the information below to `.env` file before run the project:
-
-```
-DB_HOST=127.0.0.1
-DB_NAME='wamppy'
-DB_NAME_FOR_TEST="wamppytest"
-DB_USER='postgres'
-DB_PASSWORD='postgres'
-TOKEN_SECRET='AHMEDMOSMAN'
-PEPPER='OSMAN'
-SALT_ROUNDS=12
-ENV='dev'
-```
-#### PLEASE NOTE: that without the `.env` file the project will not going to work. You should create it.
-
 ## 🏁 Installation Instructions:
 In this section, you can find all the package that I have used. You can simply ``` npm i ``` or ``` yarn ``` to install them all from my [package.json](package.json)  file
 
@@ -101,3 +84,20 @@ After start up, the server will start on port `3001`.
 Run test with 
 
 `yarn test` or `npm run test` to run jasmine test files.
+
+## 🌴 Enviromental Variables Set up:
+
+Add the information below to `.env` file before run the project:
+
+```
+DB_HOST=127.0.0.1
+DB_NAME='wamppy'
+DB_NAME_FOR_TEST="wamppytest"
+DB_USER='postgres'
+DB_PASSWORD='postgres'
+TOKEN_SECRET='AHMEDMOSMAN'
+PEPPER='OSMAN'
+SALT_ROUNDS=12
+ENV='dev'
+```
+#### PLEASE NOTE: that without the `.env` file the project will not going to work. You should create it.
