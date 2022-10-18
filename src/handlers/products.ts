@@ -1,5 +1,7 @@
 import { Product, ProductModel } from "../models/products";
 import express, { Request, Response } from "express";
+import { verifyUser } from "../helpers/jwtFun";
+
 const Products = new ProductModel();
 
 const index = async (req: Request, res: Response) => {
@@ -33,6 +35,7 @@ const selectCategory = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
   try {
+    verifyUser(req)
     const { name, price, category } = req.body;
     const product: Product = { name, price, category };
     const newProduct = await Products.create(product);
@@ -44,6 +47,7 @@ const create = async (req: Request, res: Response) => {
 
 const deleteProduct = async (req: Request, res: Response) => {
   try {
+    verifyUser(req)
     const productID = Number(req.params.id);
     const delProduct = await Products.deleteProduct(productID);
     res.send(delProduct);

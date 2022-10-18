@@ -1,5 +1,6 @@
 import { Order, OrderModel } from "../models/orders";
 import express, { Request, Response } from "express";
+import { verifyUser } from "../helpers/jwtFun";
 const Order = new OrderModel();
 
 const index = async (req: Request, res: Response) => {
@@ -35,6 +36,7 @@ const showUserCompletedOrders = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
   try {
     const { quantity, status, pro_id, user_id } = req.body;
+    verifyUser(req);
     const order: Order = { quantity, status, pro_id, user_id };
     const newOrder = await Order.create(order);
     res.send(newOrder);
@@ -45,6 +47,7 @@ const create = async (req: Request, res: Response) => {
 
 const deleteOrder = async (req: Request, res: Response) => {
   try {
+    verifyUser(req)
     const orderID = Number(req.params.id);
     const delOrder = await Order.deleteOrder(orderID);
     res.send(delOrder);

@@ -3,6 +3,7 @@ import { Order } from '../../models/orders';
 import supertest from 'supertest';
 import { User, UsersModel } from "../../models/users";
 import { Product, ProductModel } from "../../models/products";
+import { JwtPayload, verify } from 'jsonwebtoken';
 
 const request = supertest(app);
 describe('Test the orders endpoint /orders', () => {
@@ -14,10 +15,13 @@ describe('Test the orders endpoint /orders', () => {
     pro_id: 0,
     user_id: 0,
   };
+  // secret form env file:
+  const theSecretToken = process.env.TOKEN_SECRET as string;
 
   // safe some information outside the orders to test it:
   let OID: string;
-  
+  let UID: string;
+  let UserToken: string;
 // we should create product and user to test orders:
 // create a user:
 const UserModel = new UsersModel();
@@ -41,11 +45,26 @@ const testProduct: Product = {
     const newProduct = await ProductsModel.create(testProduct);
     if (newUser.id) testOrder.user_id = newUser.id;
     if (newProduct.id) testOrder.pro_id = newProduct.id;
+    // create user to get the token:
+    await request
+    .post('/users/create')
+    .send(testUser)
+    .expect(200)
+    .then((res) => {
+      // the response is the token:
+      UserToken = res.text;
+       // verify it:
+      const decodedJWT = verify(UserToken as string, theSecretToken) as JwtPayload;
+      // get the user ID after decoded the token.
+      UID = decodedJWT.data.UID;
+    });
+
     });
 
   it('Test the create endpoint with testOrder data', async () => {
     await request
       .post('/orders/create')
+      .set('Authorization', `Bearer ${UserToken}`)
       .send(testOrder)
       .expect(200)
       .then((res) => {
@@ -63,6 +82,7 @@ const testProduct: Product = {
   it('Test the index endpoint to show specific orders', async () => {
     await request
       .get(`/orders/${OID}`)
+      .set('Authorization', `Bearer ${UserToken}`)
       .expect(200);
   });
 

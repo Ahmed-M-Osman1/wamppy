@@ -1,6 +1,8 @@
 import app from '../../index';
 import { Product } from '../../models/products';
 import supertest from 'supertest';
+import { User } from "../../models/users";
+import { JwtPayload, verify } from 'jsonwebtoken';
 
 const request = supertest(app);
 describe('Test the product endpoint /product', () => {
@@ -11,13 +13,39 @@ describe('Test the product endpoint /product', () => {
     price: 1.000,
     category: "test",
   };
+ // secret form env file:
+ const theSecretToken = process.env.TOKEN_SECRET as string;
 
   // safe some information outside the product to test it:
   let PID: string;
-  
+  let UserToken: string;
+
+  const testUser: User = {
+    firstname: "ahmed",
+    lastname: "mamdouh",
+    email: "ahmed@udacity.com",
+    password: "password",
+  };
+
+  beforeAll(async () => {
+    // create user to get the token:
+    await request
+    .post('/users/create')
+    .send(testUser)
+    .expect(200)
+    .then((res) => {
+      // the response is the token:
+      UserToken = res.text;
+       // verify it:
+      const decodedJWT = verify(UserToken as string, theSecretToken) as JwtPayload;
+      // get the user ID after decoded the token.
+    });
+    });
+
   it('Test the create endpoint with testProduct data', async () => {
     await request
       .post('/products/create')
+      .set('Authorization', `Bearer ${UserToken}`)
       .send(testProduct)
       .expect(200)
       .then((res) => {
