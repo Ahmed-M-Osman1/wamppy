@@ -8,10 +8,10 @@ describe('Test the users endpoint /users', () => {
 
   // the data of tested user: 
   const testUser: User = {
-    firstname: "ahmed2",
-    lastname: "mamdouh2",
-    email: "ahmed3@udacity.com",
-    password: "password1",
+    firstname: "ahmedM",
+    lastname: "Osman",
+    email: "ahmedMOsman@udacity.com",
+    password: "password123",
   };
   // secret form env file:
   const theSecretToken = process.env.TOKEN_SECRET as string;
@@ -61,5 +61,12 @@ describe('Test the users endpoint /users', () => {
       .get(`/users/${UID+1}`)
       .set('Authorization', `Bearer ${UserToken}`)
       .expect(401);
+  });
+
+  it('Test the delete endpoint with correct token and not correct user ID', async () => {
+    await request
+      .get(`/users/delete/${UID+1}`)
+      .set('Authorization', `Bearer ${UserToken}`)
+      .expect(404);
   });
 });

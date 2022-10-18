@@ -51,6 +51,7 @@ const create = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const userID = Number(req.params.id);
+    verifyUser(req,userID);
     const delUser = await User.deleteUser(userID);
     res.send(delUser);
   } catch (error) {

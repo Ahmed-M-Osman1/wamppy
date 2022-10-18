@@ -1,50 +1,53 @@
-import { Product, ProductModel } from "../../models/products";
-const ProductsModel = new ProductModel();
-const testProduct: Product = {
-  name: "testItem",
-  price: 1.000,
-  category: "test",
-};
-let newProduct: Product;
-describe("Testing ProductsModel: ", () => {
-  it("Test the create methods", () => {
-    expect(ProductsModel.create).toBeDefined();
+import app from '../../index';
+import { Product } from '../../models/products';
+import supertest from 'supertest';
+
+const request = supertest(app);
+describe('Test the product endpoint /product', () => {
+
+  // the data of tested product: 
+  const testProduct: Product = {
+    name: "testItem",
+    price: 1.000,
+    category: "test",
+  };
+
+  // safe some information outside the product to test it:
+  let PID: string;
+  
+  it('Test the create endpoint with testProduct data', async () => {
+    await request
+      .post('/products/create')
+      .send(testProduct)
+      .expect(200)
+      .then((res) => {
+        // the response is the token:
+        PID = res.body.id;
+      });
   });
-  it("Test the create methods with testProduct data", async () => {
-    newProduct = await ProductsModel.create(testProduct);
-    expect({
-      name: newProduct.name,
-      category: newProduct.category,
-    }).toEqual({
-      name: testProduct.name,
-      category: testProduct.category,
-    });
-  });
-  it("Test the index methods with testProduct data", () => {
-    expect(ProductsModel.index).toBeDefined();
+  // start the testing:
+  it('Test the index endpoint to show all product', async () => {
+    await request
+      .get('/products')
+      .expect(200);
   });
 
-  it("Test the index methods to include the testProduct", async () => {
-    const allProducts = await ProductsModel.index();
-    expect(allProducts).toContain(newProduct);
+  it('Test the index endpoint to show specific product', async () => {
+    await request
+      .get(`/products/${PID}`)
+      .expect(200);
   });
 
-  it("Test the show methods", () => {
-    expect(ProductsModel.show).toBeDefined();
+
+  it('Test the index endpoint to show specific category', async () => {
+    await request
+      .get(`/products/category/${testProduct.category}`)
+      .expect(200);
   });
 
-  it("Test the show methods to return the testProduct", async () => {
-    const ProductToSearch = await ProductsModel.show(newProduct.id as number);
-    expect(ProductToSearch).toEqual(newProduct);
-  });
-  it("Test the delete method", () => {
-    expect(ProductsModel.deleteProduct).toBeDefined();
-  });
-
-  it("Test the delete method to return the deleted Product", async () => {
-    const deletedProduct = await ProductsModel.deleteProduct(
-      newProduct.id as number
-    );
-    expect(deletedProduct.id).toEqual(newProduct.id);
+  it('Test the delete endpoint with not correct product ID', async () => {
+    await request
+      .get(`/products/delete/${PID+1}`)
+      .expect(404);
   });
 });
