@@ -1,7 +1,7 @@
 // import models, express and verifyUser
-import { User, UsersModel } from "../models/users";
-import express, { Request, Response } from "express";
-import { verifyUser, SignIn } from "../helpers/jwtFun";
+import { User, UsersModel } from '../models/users';
+import express, { Request, Response } from 'express';
+import { verifyUser, SignIn } from '../helpers/jwtFun';
 
 // create new orders models:
 const User = new UsersModel();
@@ -9,9 +9,9 @@ const User = new UsersModel();
 // index route: show all Users:
 const index = async (req: Request, res: Response) => {
   try {
+    await verifyUser(req);
     const users = await User.index();
-    verifyUser(req);
-    res.send(users);
+    res.status(200).send(users);
   } catch (error) {
     const e = error as Error;
     console.log(e);
@@ -25,15 +25,15 @@ const show = async (req: Request, res: Response) => {
     // get ID
     const userID = Number(req.params.id);
     // verify user
-    verifyUser(req, userID);
+    await verifyUser(req, userID);
     const showUser = await User.show(userID);
-        // send the response to user:
-        res.send(showUser);
+    // send the response to user:
+    res.send(showUser);
   } catch (error) {
     const e = error as Error;
     if (
       e.message.includes(
-        "user you ask for does not match with current user token - please provide a correct user ID"
+        'user you ask for does not match with current user token - please provide a correct user ID'
       )
     ) {
       res.status(401).json(e.message);
@@ -51,7 +51,7 @@ const create = async (req: Request, res: Response) => {
     const userDate: User = { firstname, lastname, email, password };
     const newUser = await User.create(userDate);
     const token = SignIn(Number(newUser.id));
-            // send the response to user:
+    // send the response to user:
     res.send(token);
   } catch (error) {
     res.status(500).json(error);
@@ -64,7 +64,7 @@ const deleteUser = async (req: Request, res: Response) => {
     // get ID:
     const userID = Number(req.params.id);
     // verify token
-    verifyUser(req,userID);
+    await verifyUser(req, userID);
     const delUser = await User.deleteUser(userID);
     // send the response to user:
     res.send(delUser);
@@ -83,7 +83,7 @@ const sign = async (req: Request, res: Response) => {
     // if user can't login:
     if (signInUser === null) {
       res.status(401);
-      res.json("Incorrect user information");
+      res.json('Incorrect user information');
     } else {
       // user login successfully:
       var token = SignIn(Number(signInUser.id));
@@ -99,11 +99,11 @@ const sign = async (req: Request, res: Response) => {
 
 // available routes:
 const users_routes = (app: express.Application) => {
-  app.get("/users", index);
-  app.get("/users/:id", show);
-  app.post("/users/create", create);
-  app.delete("/users/delete/:id", deleteUser);
-  app.post("/users/login", sign);
+  app.get('/users', index);
+  app.get('/users/:id', show);
+  app.post('/users/create', create);
+  app.delete('/users/delete/:id', deleteUser);
+  app.post('/users/login', sign);
 };
 
 export default users_routes;

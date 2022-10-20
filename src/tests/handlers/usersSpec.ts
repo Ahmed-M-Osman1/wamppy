@@ -5,13 +5,12 @@ import { JwtPayload, verify } from 'jsonwebtoken';
 
 const request = supertest(app);
 describe('Test the users endpoint /users', () => {
-
-  // the data of tested user: 
+  // the data of tested user:
   const testUser: User = {
-    firstname: "ahmedM",
-    lastname: "Osman",
-    email: "ahmedMOsman@udacity.com",
-    password: "password123",
+    firstname: 'ahmedM',
+    lastname: 'Osman',
+    email: 'ahmedMOsman@udacity.com',
+    password: 'password123',
   };
   // secret form env file:
   const theSecretToken = process.env.TOKEN_SECRET as string;
@@ -19,7 +18,7 @@ describe('Test the users endpoint /users', () => {
   // safe some information outside the user to test it:
   let UID: string;
   let UserToken: string;
-  
+
   it('Test the create endpoint with testUser data', async () => {
     await request
       .post('/users/create')
@@ -28,8 +27,11 @@ describe('Test the users endpoint /users', () => {
       .then((res) => {
         // the response is the token:
         UserToken = res.text;
-         // verify it:
-        const decodedJWT = verify(UserToken as string, theSecretToken) as JwtPayload;
+        // verify it:
+        const decodedJWT = verify(
+          UserToken as string,
+          theSecretToken
+        ) as JwtPayload;
         // get the user ID after decoded the token.
         UID = decodedJWT.data.UID;
       });
@@ -45,7 +47,7 @@ describe('Test the users endpoint /users', () => {
   it('Test the index endpoint with fake token', async () => {
     await request
       .get('/users')
-      .set('Authorization', 'Bearer Ahmedosmanfaketokenformudacity')
+      .set('Authorization', 'Bearer fakeTokenAhmedOsman')
       .expect(500);
   });
 
@@ -58,14 +60,14 @@ describe('Test the users endpoint /users', () => {
 
   it('Test the show endpoint with correct token and not correct user ID', async () => {
     await request
-      .get(`/users/${UID+1}`)
+      .get(`/users/${UID + 1}`)
       .set('Authorization', `Bearer ${UserToken}`)
       .expect(401);
   });
 
   it('Test the delete endpoint with correct token and not correct user ID', async () => {
     await request
-      .get(`/users/delete/${UID+1}`)
+      .get(`/users/delete/${UID + 1}`)
       .set('Authorization', `Bearer ${UserToken}`)
       .expect(404);
   });
